@@ -20,6 +20,7 @@ notify-debouncer-mini = "0.2.1"
 color-eyre = "0.6.2"
 glam = { version = "0.23.0", features = ["bytemuck"] }
 pollster = { version = "0.3.0", features = ["macro"] }
+palette = { version = "0.7.1", features = ["bytemuck"] }
 # winit = "0.26.0"
 # wgpu = "0.12.0"
 # egui-winit = "0.9.0"

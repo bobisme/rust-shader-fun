@@ -389,14 +389,11 @@ impl Renderer {
         target_view: Option<&wgpu::TextureView>,
     ) {
         // Render the triangle.
-        let color = app.triangle_color;
-        let color_array: [f32; 4] = [
-            color.r() as f32 / 255.0,
-            color.g() as f32 / 255.0,
-            color.b() as f32 / 255.0,
-            color.a() as f32 / 255.0,
-        ];
-        let bind_group = create_bind_group(&self.device, &self.bind_group_layout, &color_array);
+        let bind_group = create_bind_group(
+            &self.device,
+            &self.bind_group_layout,
+            &app.triangle_color.into(),
+        );
         {
             let (view, resolve_target) = match target_view {
                 Some(target) => (target, Some(view)),
@@ -408,7 +405,7 @@ impl Renderer {
                     view,
                     resolve_target,
                     ops: wgpu::Operations {
-                        load: wgpu::LoadOp::Clear(wgpu::Color::WHITE),
+                        load: wgpu::LoadOp::Clear(app.bg_color.into()),
                         store: true,
                     },
                 })],

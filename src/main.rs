@@ -1,4 +1,5 @@
 mod app;
+pub mod color;
 mod renderer;
 
 use std::path::Path;
