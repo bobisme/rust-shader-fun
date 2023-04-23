@@ -2,17 +2,17 @@ mod app;
 mod renderer;
 
 use std::path::Path;
-use std::sync::mpsc::{channel, Receiver, Sender, TryRecvError};
+use std::sync::mpsc::{channel, Sender, TryRecvError};
 use std::time::Duration;
 use std::{
-    borrow::{Borrow, BorrowMut},
+    borrow::BorrowMut,
     collections::HashMap,
     sync::{Arc, Mutex},
 };
 
-use color_eyre::eyre::{eyre, Result};
+use color_eyre::eyre::Result;
 use dashmap::DashMap;
-use notify::{RecursiveMode, Watcher};
+use notify::RecursiveMode;
 use notify_debouncer_mini::{new_debouncer, DebouncedEvent, Debouncer};
 use renderer::Renderer;
 use winit::{
@@ -63,7 +63,7 @@ async fn main() -> Result<()> {
     let mut renderer = Renderer::new(&mut [(win, *col)], Arc::clone(&contexts)).await?;
 
     let (sender, receiver) = channel();
-    let watcher = watch_shader_files(sender)?;
+    let _watcher = watch_shader_files(sender)?;
 
     event_loop.run(move |event, _, control_flow| {
         *control_flow = ControlFlow::Poll;
@@ -108,7 +108,7 @@ async fn main() -> Result<()> {
             Ok(_events) => {
                 // Ok(DebouncedEvent::Write(_)) | Ok(DebouncedEvent::Create(_)) => {
                 println!("Shader file changed. Reloading shaders...");
-                let (win, col) = viewport_map.get(&window_id).unwrap();
+                let (_win, _col) = viewport_map.get(&window_id).unwrap();
                 renderer.reload().unwrap();
                 Ok(())
             }

@@ -1,7 +1,6 @@
 use crate::app::App;
 
 use std::{
-    borrow::{BorrowMut, Cow},
     collections::HashMap,
     sync::{Arc, Mutex},
 };
@@ -49,7 +48,6 @@ impl Vertex {
 
 struct ViewportDesc {
     window: WindowId,
-    background: wgpu::Color,
     surface: wgpu::Surface,
 }
 
@@ -60,11 +58,10 @@ struct Viewport {
 }
 
 impl ViewportDesc {
-    fn new(window: &Window, background: wgpu::Color, instance: &wgpu::Instance) -> Self {
+    fn new(window: &Window, instance: &wgpu::Instance) -> Self {
         let surface = unsafe { instance.create_surface(window) }.unwrap();
         Self {
             window: window.id(),
-            background,
             surface,
         }
     }
@@ -163,7 +160,6 @@ pub struct Renderer {
     index_buffer: wgpu::Buffer,
     num_indices: u32,
     egui_renderers: HashMap<WindowId, egui_wgpu::Renderer>,
-    egui_painters: HashMap<WindowId, egui_wgpu::winit::Painter>,
     // pub egui_contexts: HashMap<WindowId, egui::Context>,
     egui_contexts: Arc<DashMap<WindowId, egui::Context>>,
 }
@@ -176,7 +172,7 @@ impl Renderer {
         let instance = wgpu::Instance::default();
         let viewport_descriptions: Vec<_> = viewports
             .iter()
-            .map(|(window, color)| ViewportDesc::new(window, *color, &instance))
+            .map(|(window, _)| ViewportDesc::new(window, &instance))
             .collect();
         let adapter = instance
             .request_adapter(&wgpu::RequestAdapterOptions {
@@ -215,17 +211,6 @@ impl Renderer {
             .next()
             .expect("could not get first viewport");
 
-        let mut egui_painters: HashMap<WindowId, egui_wgpu::winit::Painter> =
-            HashMap::with_capacity(viewports.len());
-        // for (window, _) in viewports.iter_mut() {
-        //     let mut painter =
-        //         egui_wgpu::winit::Painter::new(Default::default(), MSAA_SAMPLES, 0, false);
-        //     unsafe { painter.set_window(Some(*window)) }
-        //         .await
-        //         .expect("could not set window for painter");
-        //     egui_painters.insert(window.id(), painter);
-        // }
-
         let egui_renderers = viewports
             .iter()
             .map(|(window, _)| {
@@ -253,7 +238,6 @@ impl Renderer {
             num_indices,
             // platform,
             egui_renderers,
-            egui_painters,
             egui_contexts,
         })
     }
@@ -310,7 +294,7 @@ impl Renderer {
             //     None => None,
             // };
 
-            let mut encoder = self
+            let encoder = self
                 .device
                 .create_command_encoder(&wgpu::CommandEncoderDescriptor {
                     label: Some("Render Encoder"),

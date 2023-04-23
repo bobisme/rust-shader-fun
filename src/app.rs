@@ -3,18 +3,18 @@ use winit::{event::WindowEvent, window::WindowId};
 
 pub struct App {
     pub triangle_color: Color32,
-    color_picker_open: bool,
+    // color_picker_open: bool,
 }
 
 impl App {
     pub fn new() -> Self {
         Self {
             triangle_color: Color32::BLUE,
-            color_picker_open: true,
+            // color_picker_open: true,
         }
     }
 
-    pub fn handle_window_event(&mut self, window_id: WindowId, event: &WindowEvent) {
+    pub fn handle_window_event(&mut self, _window_id: WindowId, _event: &WindowEvent) {
         // You can handle window events here, e.g., keyboard input or resizing.
     }
 
