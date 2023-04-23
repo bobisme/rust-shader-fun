@@ -8,7 +8,7 @@ use std::{
 
 use color_eyre::eyre::{eyre, Result};
 use dashmap::DashMap;
-use glam::Vec3;
+use glam::{vec3, Vec3};
 use wgpu::{util::DeviceExt, RenderPipeline};
 use winit::{
     dpi::PhysicalSize,
@@ -463,9 +463,9 @@ impl Renderer {
 
         // Create vertex and index buffers.
         let vertices: &[Vertex] = &[
-            Vertex::new([-0.5, -0.5, 0.0]),
-            Vertex::new([0.5, -0.5, 0.0]),
-            Vertex::new([0.0, 0.5, 0.0]),
+            Vertex::new(vec3(-0.5, -0.5, 0.0)),
+            Vertex::new(vec3(0.5, -0.5, 0.0)),
+            Vertex::new(vec3(0.0, 0.5, 0.0)),
         ];
         let indices: &[u16] = &[0, 1, 2];
 
