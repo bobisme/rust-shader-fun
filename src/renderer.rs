@@ -47,7 +47,6 @@ impl Vertex {
 }
 
 struct ViewportDesc {
-    window: WindowId,
     surface: wgpu::Surface,
 }
 
@@ -60,10 +59,7 @@ struct Viewport {
 impl ViewportDesc {
     fn new(window: &Window, instance: &wgpu::Instance) -> Self {
         let surface = unsafe { instance.create_surface(window) }.unwrap();
-        Self {
-            window: window.id(),
-            surface,
-        }
+        Self { surface }
     }
 
     fn create_target_texture(
